@@ -64,7 +64,16 @@ module SiteSettingExtension
 
   # table is not in the db yet, initial migration, etc
   def table_exists?
-    @table_exists = ActiveRecord::Base.connection.table_exists? 'site_settings' if @table_exists == nil
+    if @table_exists.nil?
+      begin
+        @table_exists = ActiveRecord::Base.connection.table_exists? 'site_settings'
+      rescue => e
+        # Attempting to run 'rake assets:precompile' and such without
+        # a database instance? (heroku)
+        puts e.backtrace
+        @table_exists = false
+      end
+    end
     @table_exists
   end
 

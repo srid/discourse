@@ -32,6 +32,10 @@ module Discourse
 
     config.assets.precompile += ['admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js', 'jquery.js']
 
+    # For Heroku,
+    # https://devcenter.heroku.com/articles/rails3x-asset-pipeline-cedar#troubleshooting
+    # config.assets.initialize_on_precompile = false
+
     # Activate observers that should always be running.
     config.active_record.observers = [
         :user_email_observer,
