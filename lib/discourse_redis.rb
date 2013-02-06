@@ -4,9 +4,12 @@
 class DiscourseRedis
   
   def initialize
-    @config = YAML::load(File.open("#{Rails.root}/config/redis.yml"))[Rails.env]
-    redis_opts = {:host => @config['host'], :port => @config['port'], :db => @config['db']}
-    @redis = Redis.new(redis_opts)    
+    # XXX: stackato
+    # @config = YAML::load(File.open("#{Rails.root}/config/redis.yml"))[Rails.env]
+    # redis_opts = {:host => @config['host'], :port => @config['port'], :db => @config['db']}
+    # @redis = Redis.new(redis_opts)    
+    uri = URI.parse(ENV["REDIS_URL"])
+    @redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
   end
 
   # prefix the key with the namespace
@@ -36,7 +39,9 @@ class DiscourseRedis
   end
 
   def url
-    "redis://#{@config['host']}:#{@config['port']}/#{@config['db']}"
+    # XXX: stackato
+    # "redis://#{@config['host']}:#{@config['port']}/#{@config['db']}"
+    ENV["REDIS_URL"]
   end
 
 end

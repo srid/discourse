@@ -82,7 +82,10 @@ module Discourse
 
     # Use redis for our cache
     redis_config = YAML::load(File.open("#{Rails.root}/config/redis.yml"))[Rails.env]
-    redis_store = ActiveSupport::Cache::RedisStore.new "redis://#{redis_config['host']}:#{redis_config['port']}/#{redis_config['cache_db']}"
+    # TODO: make it generic (not stackato-specific)
+    # redis_store = ActiveSupport::Cache::RedisStore.new "redis://#{redis_config['host']}:#{redis_config['port']}/#{redis_config['cache_db']}"
+    puts "REDIS_URL is #{ENV['REDIS_URL']}"
+    redis_store = ActiveSupport::Cache::RedisStore.new ENV['REDIS_URL']
     redis_store.options[:namespace] = -> { DiscourseRedis.namespace }
     config.cache_store = redis_store
 
