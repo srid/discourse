@@ -1,0 +1,14 @@
+name: discourse
+
+framework:
+  type: buildpack
+  runtime: ruby19
+
+services:
+  ${name}-db:    postgresql
+  ${name}-redis: redis
+
+# `rake db:migrate` is run by the framework.
+hooks:
+  post-staging:
+    - bundle exec rake db:seed_fu
