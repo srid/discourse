@@ -9,7 +9,19 @@ services:
   ${name}-redis: redis
   ${name}-cache: filesystem
 
-# disabled because of https://github.com/discourse/discourse/issues/50
-# hooks:
-#   post-staging:
-#     - bundle exec rake db:seed_fu
+# minimium recommended: 1G
+# http://meta.discourse.org/t/stack-requirements-for-a-diy-discourse/803
+mem: 512M
+
+# XXX: this doesn't work, at least on 2.6.
+env:
+  RAILS_ENV: development
+
+# seed_fu requires RAILS_ENV=development for some reason.
+hooks:
+  pre-staging:
+    - echo "RAILS_ENV is $RAILS_ENV"
+  pre-running:
+    - echo "RAILS_ENV is $RAILS_ENV"
+  post-staging:
+    - bundle exec rake db:seed_fu
