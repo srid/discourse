@@ -16,7 +16,12 @@ MessageBus.on_disconnect do |site_id|
 end
 
 # Point at our redis
-MessageBus.redis_config = YAML::load(File.open("#{Rails.root}/config/redis.yml"))[Rails.env].symbolize_keys
+redis_uri = URI.parse(ENV["REDIS_URL"])
+MessageBus.redis_config = {
+  :host => redis_uri.host,
+  :port => redis_uri.port,
+  :password => redis_uri.password }
+# MessageBus.redis_config = YAML::load(File.open("#{Rails.root}/config/redis.yml"))[Rails.env].symbolize_keys
 
 MessageBus.long_polling_enabled = SiteSetting.enable_long_polling
 MessageBus.long_polling_interval = SiteSetting.long_polling_interval
